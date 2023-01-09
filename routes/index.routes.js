@@ -10,7 +10,6 @@ const cors = require("cors");
 router.get("/pubs", (req, res, next) => {
   Pub.find()
   .then(pubs => {
-    console.log(pubs)
     res.status(200).json(pubs)
   })
   .catch(err => console.log(err))
