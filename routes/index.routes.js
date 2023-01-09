@@ -1,11 +1,19 @@
 const router = require("express").Router();
 const axios = require('axios')
 const nodemailer = require('nodemailer');
+const Pub = require('../models/Pub.model')
+const Admin = require('../models/Admin.model')
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 const cors = require("cors");
 
-router.get("/", (req, res, next) => {
-  res.json("All good in here");
+router.get("/pubs", (req, res, next) => {
+  Pub.find()
+  .then(pubs => {
+    console.log(pubs)
+    res.status(200).json(pubs)
+  })
+  .catch(err => console.log(err))
 });
 
 
@@ -59,5 +67,32 @@ router.post("/validatecaptcha", cors(), (req, res) => {
     })
     .catch(err => console.log(err))
   });
+
+  router.post('/submitpub', (req, res) => {
+    const { name, street, city, state, postcode, image, longitude, latitude, websiteLink, dateVerified, password } = req.body.data
+    Admin.findOne()
+    .then((admin) => {
+      const passwordCorrect = bcrypt.compareSync(password, admin.password);
+
+      if (!passwordCorrect){
+        res.status(400).json({ messageUserExists: "Password is incorrect." });
+      }
+      else {
+        Pub.findOne({ name })
+        .then((foundPub) => {
+          if (foundPub) {
+            res.status(400).json({ messageUserExists: "User already exists." });
+            return;
+          }
+        Pub.create({ name, street, city, state, postcode, image, longitude, latitude, websiteLink, dateVerified })
+        .then(pub => {
+          res.status(200).json({ messageUserExists: "Pub successfully added" });
+        })
+        .catch(err => console.log(err))
+        })
+      }
+    })
+    .catch(err => console.log(err))
+  })
 
 module.exports = router;
