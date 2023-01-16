@@ -51,11 +51,9 @@ router.post("/validatecaptcha", cors(), (req, res) => {
         transporter.sendMail(mailOptions, (err, response) => {
             if (err) {
                 console.log(err)
-                // res.status(401).json('there was an error', err)
             }
             else {
-                console.log(response)
-                // res.status(200).json('email sent')
+                console.log("mail sent")
             }
         })
       }
