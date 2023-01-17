@@ -29,7 +29,7 @@ router.post("/validatecaptcha", cors(), (req, res) => {
         )
       }
       if (response.status===200) {
-          res.send("Good");
+          console.log("captcha good");
           const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -48,7 +48,7 @@ router.post("/validatecaptcha", cors(), (req, res) => {
             text: watchSuggestion
         }
         
-        transporter.sendMail(mailOptions, (err, response) => {
+        transporter.sendMail(mailOptions, (err) => {
             if (err) {
                 console.log(err)
             }
