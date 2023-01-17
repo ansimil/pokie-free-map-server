@@ -53,7 +53,7 @@ router.post("/validatecaptcha", cors(), (req, res) => {
                 console.log(err)
             }
             else {
-                console.log("mail sent")
+                res.json('mail sent')
             }
         })
       }
